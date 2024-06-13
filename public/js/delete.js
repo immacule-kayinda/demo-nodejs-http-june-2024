@@ -5,7 +5,7 @@ deleteButton.addEventListener("click", async (event) => {
   if(confirm("Voulez vous vraiment supprimer cet article")){
     try {
     console.log(slug);
-    const response = await fetch(`/article/delete/${slug}`, {
+    const response = await fetch(`/article/${slug}`, {
         method: "DELETE",
     });
     console.log(response);

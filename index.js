@@ -77,7 +77,9 @@ app.get("/articles/:slug", (req, res) => {
   }
 });
 
-app.delete("/article/delete/:slug", function (req, res) {
+
+
+app.delete("/article/:slug", function (req, res) {
   const slug = req.params.slug;
   const index = articles.findIndex((article) => article.slug === slug);
   if (index === -1) {
