@@ -10,7 +10,7 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 
-function addArticleValidations() {
+function articleFieldsValidations() {
   return [
     body("title")
       .escape()
@@ -31,6 +31,10 @@ function addArticleValidations() {
       .withMessage("Le contenu doit avoir entre 5 et 500 caracteres"),
   ];
 }
+
+const updateDataBase = (array) => {
+  fs.writeFileSync("./data/db.json", JSON.stringify(array));
+};
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -53,7 +57,7 @@ app.get("/articles", (req, res) => {
 // description: pas vide, echapper, max : 500 min: 5
 // contenu : pas vide, echapper, max : 500 min: 5
 
-app.post("/articles", addArticleValidations(), (req, res) => {
+app.post("/articles", articleFieldsValidations(), (req, res) => {
   const article = req.body;
 
   const result = validationResult(req);
@@ -77,7 +81,33 @@ app.get("/articles/:slug", (req, res) => {
   }
 });
 
+app.put("/articles/:slug", (req, res) => {
+  const { slug } = req.params;
+  const { title, author, content, description, urlToImage } = req.body;
+  const article = articles.find((article) => article.slug === slug);
 
+  if (article) {
+    article.title = title;
+    article.author = author;
+    article.content = content;
+    article.description = description;
+    article.urlToImage = urlToImage;
+    article.updatedAt = new Date();
+  } else {
+    return res.status(404);
+  }
+});
+
+app.get("/article/update/:slug", (req, res) => {
+  const { slug } = req.params;
+  const article = articles.find((article) => article.slug === slug);
+
+  if (article) {
+    res.render("updateArticle", { article });
+  } else {
+    res.render("404");
+  }
+})
 
 app.delete("/article/:slug", function (req, res) {
   const slug = req.params.slug;
@@ -87,7 +117,6 @@ app.delete("/article/:slug", function (req, res) {
     fs.writeFileSync("./data/db.json", JSON.stringify(articles, null, 2));
     res.send("ok");
   } else {
-
   }
 });
 
