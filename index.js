@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const { body, validationResult } = require("express-validator");
+const fs = require("fs");
 
 const articles = require("./data/db.json");
 app.set("view engine", "ejs");
@@ -19,10 +20,7 @@ function addArticleValidations() {
       .escape()
       .isLength({ min: 2, max: 50 })
       .withMessage("Le nom doit avoir entre 2 et 50 caracteres"),
-    body("image")
-      .escape()
-      .isURL()
-      .withMessage("L'url de l'image n'est pas valide"),
+    body("image").isURL().withMessage("L'url de l'image n'est pas valide"),
     body("description")
       .escape()
       .isLength({ min: 5, max: 500 })
@@ -79,15 +77,36 @@ app.get("/articles/:slug", (req, res) => {
   }
 });
 
+app.delete("/article/delete/:slug", function (req, res) {
+  const slug = req.params.slug;
+  const index = articles.findIndex((article) => article.slug === slug);
+  if (index === -1) {
+    console.log(articles.splice(index, 1));
+    fs.writeFileSync("./data/db.json", JSON.stringify(articles, null, 2));
+    res.send("ok");
+  } else {
+
+  }
+});
+
 app.get("/article/add", (req, res) => {
-  res.render("addArticle");
+  const article = req.body;
+  console.log(article);
+  const result = validationResult(req);
+  if (result.errors.length === 0) {
+    article.slug = articles.title.toLowerCase().replace(" ", "-");
+    article.publishedAt = new Date();
+    articles.push(article);
+    fs.writeFileSync("./data/db.json", JSON.stringify(articles, null, 2));
+    res.render("ok");
+  }
 });
 
 app.get("/*", (req, res, next) => {
   res.render("404");
 });
 
-const port = 3001;
+const port = 3000;
 
 app.listen(port, function () {
   console.log(`l'application ecoute sur le port ${port}`);

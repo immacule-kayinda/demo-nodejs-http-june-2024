@@ -5,4 +5,9 @@
 <h2><%= article.description %></h2>
 <img src="<%= `${article.urlToImage}` %>" alt="gallery image" />
 <p><%= article.content %></p>
+
+<input type="button" value="Modifier" />
+<input type="button" class="<%= article.slug %>" id="deleteBtn" value="Supprimer" />
+
+<script type="text/javascript" src="delete.js"></script>
 <%- include("./partials/footer.ejs") %>
