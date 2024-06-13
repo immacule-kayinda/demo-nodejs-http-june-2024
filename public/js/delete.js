@@ -1,7 +1,7 @@
 const deleteButton = document.querySelector("#deleteBtn");
 
 deleteButton.addEventListener("click", async (event) => {
-  const slug = event.target.className;
+  const slug = event.target.name;
   if(confirm("Voulez vous vraiment supprimer cet article")){
     try {
     console.log(slug);
