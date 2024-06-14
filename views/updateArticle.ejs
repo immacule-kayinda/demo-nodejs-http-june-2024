@@ -1,6 +1,6 @@
 <%- include("./partials/header.ejs", {title: "About"}) %>
 
-<h1>Ajouter un article</h1>
+<h1>Modifier L'article</h1>
 
 <form action="">
   <div>
@@ -32,7 +32,10 @@
       <label for="img">Choisir une image</label>
     </div>
     <div>
-      <input type="file" value="<%= article.urlToImage %>" name="img" id="img" />
+      <img src="<%= article.urlToImage %>" wi alt="">
+    </div>
+    <div>
+      <input type="file" value="<%= article.urlToImage %>"  name="img" id="img" />
     </div>
   </div>
 
@@ -45,8 +48,8 @@
     </div>
   </div>
 
-  <input type="submit" id="btn-submit" value="Ajouter" />
+  <input type="submit" id="btn-submit" data-slug="<%= article.slug %>" value="Ajouter" />
 </form>
 
-<script src="/js/addArticle.js"></script>
+<script src="/js/updateArticle.js"></script>
 <%- include("./partials/footer.ejs") %>

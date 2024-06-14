@@ -87,12 +87,14 @@ app.put("/articles/:slug", (req, res) => {
   const article = articles.find((article) => article.slug === slug);
 
   if (article) {
+    article.slug = title.toLowerCase().replace(" ", "-");
     article.title = title;
     article.author = author;
     article.content = content;
     article.description = description;
     article.urlToImage = urlToImage;
     article.updatedAt = new Date();
+    res.status(200).send(article);
   } else {
     return res.status(404);
   }
